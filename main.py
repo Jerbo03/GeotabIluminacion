@@ -1,4 +1,7 @@
-import platform
+import sys
+import traceback
+import os
+from datetime import datetime
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.core.window import Window
@@ -9,43 +12,85 @@ from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 import serial_geotab as gt
 
-# Ajustar tamaño de ventana según plataforma
-if platform == 'android' or platform == 'ios':
-    Window.maximize()
-else:
-    Window.size = (360, 640)
-    Window.title = "Control de Luces"
+# ==================== MANEJADOR DE ERRORES GLOBAL ====================
+def global_exception_handler(exc_type, exc_value, exc_traceback):
+    """Captura cualquier excepción no manejada y la guarda en un archivo"""
+    try:
+        # Intentar guardar en Documentos (Android) o carpeta actual
+        possible_paths = [
+            '/storage/emulated/0/Documents/error_log.txt',
+            '/storage/emulated/0/Download/error_log.txt',
+            '/sdcard/Documents/error_log.txt',
+            '/sdcard/Download/error_log.txt',
+            'error_log.txt',  # carpeta local
+        ]
+        log_path = None
+        for path in possible_paths:
+            try:
+                dir_path = os.path.dirname(path)
+                if dir_path and not os.path.exists(dir_path):
+                    continue
+                log_path = path
+                break
+            except:
+                continue
+        
+        if log_path is None:
+            log_path = 'error_log.txt'
+        
+        with open(log_path, 'a') as f:
+            f.write(f"\n{'='*60}\n")
+            f.write(f"ERROR CAPTURADO: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+            f.write(f"{'='*60}\n")
+            traceback.print_exception(exc_type, exc_value, exc_traceback, file=f)
+            f.write(f"\n")
+        
+        print(f"Error guardado en: {log_path}")
+        
+    except Exception as e:
+        print(f"Error crítico al guardar log: {e}")
+        traceback.print_exception(exc_type, exc_value, exc_traceback)
+
+# Instalar el manejador global de excepciones
+sys.excepthook = global_exception_handler
+
+# ==================== CÓDIGO PRINCIPAL ====================
 
 class GeotabApp(App):
     def build(self):
-        # Cargar la interfaz desde el archivo KVmaxi
-        return Builder.load_file('geotab_gui.kv')
+        try:
+            # Cargar la interfaz desde el archivo KV
+            return Builder.load_file('geotab_gui.kv')
+        except Exception as e:
+            global_exception_handler(type(e), e, e.__traceback__)
+            from kivy.uix.label import Label
+            return Label(text=f"Error cargando UI: {e}")
     
     def on_start(self):
-        # Mostrar popup de información al inicio
-        self.show_info_popup()
-        
-        # Conectar a Geotab
         try:
+            # Mostrar popup de información al inicio
+            self.show_info_popup()
+            
+            # Conectar a Geotab
             self.api = gt.authenticate_geotab()
             self.update_status("Geotab conectado")
         except Exception as e:
+            global_exception_handler(type(e), e, e.__traceback__)
             self.api = None
-            self.update_status(f"Error Geotab: {e}")
+            self.update_status(f"Error Geotab: {str(e)[:50]}")
     
     def show_info_popup(self):
-        # Crear contenido del popup
         content = BoxLayout(orientation='vertical', padding=20, spacing=15)
         
         titulo = Label(
-            text= "[b]CONTROL DE ILUMINACIÓN[/b]",
+            text="[b]CONTROL DE ILUMINACIÓN[/b]",
             markup=True,
             font_size='18sp',
             size_hint_y=0.2
         )
         
         desarrollador = Label(
-            text="[b]Desarrollado por:[/b]\nLuis Manrique\nJosé André Paredes",
+            text="[b]Desarrollado por:[/b]\nLuis Manríquez\nJosé André Paredes",
             markup=True,
             size_hint_y=0.3
         )
@@ -92,11 +137,15 @@ class GeotabApp(App):
             gt.apagar_prender_luces(self.api, accion)
             self.update_status(f"Comando enviado: {accion.upper()}")
         except Exception as e:
-            self.update_status(f"Error: {e}")
+            global_exception_handler(type(e), e, e.__traceback__)
+            self.update_status(f"Error: {str(e)[:30]}")
     
     @mainthread
     def update_status(self, msg):
-        self.root.ids.status.text = f"Status: {msg}"
+        try:
+            self.root.ids.status.text = f"Status: {msg}"
+        except:
+            pass
 
 if __name__ == "__main__":
     GeotabApp().run()
