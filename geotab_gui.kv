@@ -1,0 +1,170 @@
+#:kivy 2.3.1
+#:set border_width 50
+
+<CustomPopup@Popup>:
+    title: "Información"
+    size_hint: (0.8, 0.6)
+    auto_dismiss: True
+    
+    BoxLayout:
+        orientation: "vertical"
+        padding: 20
+        spacing: 15
+        
+        Label:
+            text: "[b]Control de Luces Geotab[/b]"
+            markup: True
+            font_size: "18sp"
+            size_hint_y: 0.2
+        
+        Label:
+            text: "[b]Desarrollado por:[/b]\nLuis Manrique\nJosé André Paredes"
+            markup: True
+            size_hint_y: 0.3
+        
+        Label:
+            text: "[b]Contacto:[/b]\nlmanriqu@fmi.com\njparedes5@fmi.com"
+            markup: True
+            size_hint_y: 0.3
+        
+        Label:
+            text: "[b]Versión:[/b] 1.0.0"
+            markup: True
+            size_hint_y: 0.2
+        
+        Button:
+            text: "Cerrar"
+            size_hint_y: 0.3
+            on_release: root.dismiss()
+
+<BoxLayout>:
+    canvas.before:
+        Color:
+            rgba: 0, 0, 0, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+BoxLayout:
+    orientation: "vertical"
+    
+    # Header con logo y título
+    BoxLayout:
+        size_hint_y: 0.15
+        padding: 10
+        spacing: 10
+        
+        # Logo        
+        AsyncImage:
+            source: 'logo.png'
+            size_hint_x: 0.2
+            allow_stretch: True
+            keep_ratio: True
+        
+        # Título
+        Label:
+            text: "[b]CONTROL DE\nILUMINACIÓN[/b]"
+            markup: True
+            font_size: "18sp"
+            halign: "center"
+            size_hint_x: 0.6
+        
+        # Botón de información (solo la imagen)
+        Button:
+            size_hint_x: 0.2
+            background_normal: ''
+            background_color: 0, 0, 0, 1
+            on_release: app.show_info_popup()
+            
+            AsyncImage:
+                source: 'info.png'
+                size: self.parent.width * 0.6, self.parent.height * 0.6
+                pos: self.parent.center_x - (self.parent.width * 0.3), self.parent.center_y - (self.parent.height * 0.3)
+                allow_stretch: True
+                keep_ratio: True
+    
+    # Área de estado
+    Label:
+        id: status
+        text: "Status: Ready"
+        size_hint_y: 0.1
+        color: 0.5, 0.5, 0.5, 1
+    
+    # Botones de control
+    BoxLayout:
+        orientation: "vertical"
+        padding: 20
+        spacing: border_width
+        size_hint_y: 0.7
+        
+        Button:
+            id: btn_apagar
+            text: "APAGAR LUCES"
+            background_color: 0.4, 0.2, 0.2, 1
+            color: 0.9, 0.9, 0.9, 1
+            background_normal: ''
+            font_size: "20sp"
+            
+            canvas.after:
+                Color:
+                    rgba: 0, 0, 0, 1  # Negro para el borde
+                Line:
+                    rounded_rectangle: (self.x, self.y, self.width, self.height, border_width)
+                    width: border_width/2
+            
+            on_release: 
+                app.send_action("apagar")
+                root.ids.btn_apagar.background_color = (1, 0.3, 0.3, 1)
+                root.ids.btn_apagar.color = (0.1, 0.1, 0.1, 1)
+                root.ids.btn_prender.background_color = (0.2, 0.4, 0.2, 1)
+                root.ids.btn_prender.color = (0.9, 0.9, 0.9, 1)
+                root.ids.btn_luces.background_color = (0.4, 0.4, 0.2, 1)
+                root.ids.btn_luces.color = (0.9, 0.9, 0.9, 1)
+
+        Button:
+            id: btn_prender
+            text: "PRENDER LUCES"
+            background_color: 0.2, 0.4, 0.2, 1
+            color: 0.9, 0.9, 0.9, 1
+            background_normal: ''
+            font_size: "20sp"
+            
+            canvas.after:
+                Color:
+                    rgba: 0, 0, 0, 1  # Negro para el borde
+                Line:
+                    rounded_rectangle: (self.x, self.y, self.width, self.height, border_width)
+                    width: border_width/2
+            
+            on_release: 
+                app.send_action("prender")
+                root.ids.btn_prender.background_color = (0.3, 1, 0.3, 1)
+                root.ids.btn_prender.color = (0.1, 0.1, 0.1, 1)
+                root.ids.btn_apagar.background_color = (0.4, 0.2, 0.2, 1)
+                root.ids.btn_apagar.color = (0.9, 0.9, 0.9, 1)
+                root.ids.btn_luces.background_color = (0.4, 0.4, 0.2, 1)
+                root.ids.btn_luces.color = (0.9, 0.9, 0.9, 1)
+
+        Button:
+            id: btn_luces
+            text: "LUCES INTERMITENTES"
+            background_color: 0.4, 0.4, 0.2, 1
+            color: 0.9, 0.9, 0.9, 1
+            background_normal: ''
+            font_size: "20sp"
+            
+            canvas.after:
+                Color:
+                    rgba: 0, 0, 0, 1  # Negro para el borde
+                Line:
+                    rounded_rectangle: (self.x, self.y, self.width, self.height, border_width)
+                    width: border_width/2
+            
+            on_release: 
+                app.send_action("luces")
+                root.ids.btn_luces.background_color = (1, 1, 0.3, 1)
+                root.ids.btn_luces.color = (0.1, 0.1, 0.1, 1)
+                root.ids.btn_apagar.background_color = (0.4, 0.2, 0.2, 1)
+                root.ids.btn_apagar.color = (0.9, 0.9, 0.9, 1)
+                root.ids.btn_prender.background_color = (0.2, 0.4, 0.2, 1)
+                root.ids.btn_prender.color = (0.9, 0.9, 0.9, 1)
