@@ -37,7 +37,7 @@ version = 1.0
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3==3.10.14,kivy==master #,mygeotab==0.8.1,requests
+requirements = python3==3.11.9,kivy==2.3.1 #,mygeotab==0.8.1,requests
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -95,22 +95,22 @@ fullscreen = 0
 
 # (list) Permissions
 # (See https://python-for-android.readthedocs.io/en/latest/buildoptions/#build-options-1 for all the supported syntaxes and properties)
-android.permissions = INTERNET,ACCESS_NETWORK_STATE
+android.permissions = INTERNET
 
 # (list) features (adds uses-feature -tags to manifest)
 #android.features = android.hardware.usb.host
 
 # (int) Target Android API, should be as high as possible.
-android.api = 34
+android.api = 35
 
 # (int) Minimum API your APK / AAB will support.
 android.minapi = 30
 
 # (int) Android SDK version to use
-android.sdk = 25b
+android.sdk = 35
 
 # (str) Android NDK version to use
-#android.ndk = 23b
+android.ndk = 26c
 
 # (int) Android NDK API to use. This is the minimum API your app will support, it should usually match android.minapi.
 #android.ndk_api = 21
@@ -321,7 +321,7 @@ android.allow_backup = True
 #p4a.fork = kivy
 
 # (str) python-for-android branch to use, defaults to master
-#p4a.branch = master
+p4a.branch = master
 
 # (str) python-for-android specific commit to use, defaults to HEAD, must be within p4a.branch
 #p4a.commit = HEAD
