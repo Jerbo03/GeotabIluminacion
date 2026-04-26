@@ -37,7 +37,7 @@ version = 1.0
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3==3.9,kivy==2.3.1 #,mygeotab==0.8.1,requests
+requirements = python3==3.12.9,kivy==2.3.1,mygeotab==0.9.5,requests
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -95,13 +95,13 @@ fullscreen = 0
 
 # (list) Permissions
 # (See https://python-for-android.readthedocs.io/en/latest/buildoptions/#build-options-1 for all the supported syntaxes and properties)
-android.permissions = INTERNET,ACCESS_NETWORK_STATE
+android.permissions = INTERNET
 
 # (list) features (adds uses-feature -tags to manifest)
 #android.features = android.hardware.usb.host
 
 # (int) Target Android API, should be as high as possible.
-android.api = 34
+android.api = 36
 
 # (int) Minimum API your APK / AAB will support.
 android.minapi = 30
