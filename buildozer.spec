@@ -37,7 +37,7 @@ version = 1.0
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3==3.12.9,kivy==2.3.1#,mygeotab==0.9.5,requests
+requirements = python3,kivy#,mygeotab==0.9.5,requests
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
