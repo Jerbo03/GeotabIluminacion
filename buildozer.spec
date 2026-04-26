@@ -37,7 +37,7 @@ version = 1.0
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3==3.9.20,kivy==2.3.1,mygeotab==0.8.1,requests, pillow
+requirements = python3==3.10.14,kivy==2.3.0,mygeotab==0.8.1,requests
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -101,13 +101,13 @@ android.permissions = INTERNET,ACCESS_NETWORK_STATE
 #android.features = android.hardware.usb.host
 
 # (int) Target Android API, should be as high as possible.
-#android.api = 31
+android.api = 34
 
 # (int) Minimum API your APK / AAB will support.
-#android.minapi = 21
+android.minapi = 30
 
 # (int) Android SDK version to use
-#android.sdk = 20
+android.sdk = 25b
 
 # (str) Android NDK version to use
 #android.ndk = 23b
