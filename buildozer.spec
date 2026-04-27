@@ -55,7 +55,7 @@ android.permissions = INTERNET
 # --- Configuración para API 36 (Android 16 Baklava) y p4a develop ---
 android.api = 36
 android.minapi = 21
-android.ndk = 29
+android.ndk = 25
 android.sdk = 30
 
 # Arquitecturas (solo 64 bits recomendado para Play Store)
