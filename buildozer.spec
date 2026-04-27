@@ -50,7 +50,7 @@ orientation = portrait
 fullscreen = 0
 
 # Permisos necesarios
-android.permissions = INTERNET
+android.permissions = INTERNET, ACCESS_NETWORK_STATE
 
 # --- Configuración para API 36 (Android 16 Baklava) y p4a develop ---
 android.api = 36
