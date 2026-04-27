@@ -1,4 +1,3 @@
-import platform
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.core.window import Window
@@ -7,14 +6,7 @@ from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
-import serial_geotab as gt
-
-# Ajustar tamaño de ventana según plataforma
-if platform == 'android' or platform == 'ios':
-    Window.maximize()
-else:
-    Window.size = (360, 640)
-    Window.title = "Control de Luces"
+import serial_geotab as gt
 
 class GeotabApp(App):
     def build(self):
