@@ -38,8 +38,9 @@ def send_geotab_command(api, code):
 
 def apagar_prender_luces(api, accion):
     codes = {
-        "apagar": 200,
-        "prender": 100,
-        "luces": 250
+        "gen_off": 50,
+        "gen_on": 100,
+        "light_on": 150,
+        "light_off": 200
     }
     send_geotab_command(api, codes[accion])
