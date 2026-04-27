@@ -32,7 +32,7 @@ source.include_exts = py,png,jpg,kv,atlas
 version = 1.0
 
 # (list) Application requirements
-requirements = python3,kivy,aiohttp,mygeotab==0.8.1
+requirements = python3,kivy,aiohttp,mygeotab
 
 # (str) Presplash of the application
 presplash.filename = %(source.dir)s/logo.png
@@ -64,7 +64,7 @@ android.archs = arm64-v8a
 android.allow_backup = True
 
 # --- Usar la rama develop de python-for-android (requerido para API 36 / Play Store) ---
-p4a.branch = master
+p4a.branch = developer
 
 # (str) Bootstrap to use for android builds
 # p4a.bootstrap = sdl2
