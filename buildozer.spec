@@ -32,7 +32,7 @@ source.include_exts = py,png,jpg,kv,atlas
 version = 1.0
 
 # (list) Application requirements
-requirements = python3,kivy,aiohttp==3.9.0,mygeotab==0.8.1
+requirements = python3,kivy,aiohttp==3.9.0,mygeotab
 
 # (str) Presplash of the application
 presplash.filename = %(source.dir)s/logo.png
