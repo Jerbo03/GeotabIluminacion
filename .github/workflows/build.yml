@@ -1,4 +1,4 @@
-name: Build APK
+name: Build APK for Android 16 (API 36)
 
 on:
   push:
@@ -12,121 +12,78 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Used to cache dependencies with a timeout
       - name: Get Date
         id: get-date
-        run: |
-          echo "date=$(date -u '+%Y%m%d')" >> $GITHUB_ENV
+        run: echo "date=$(date -u '+%Y%m%d')" >> $GITHUB_ENV
         shell: bash
 
+      # Cachés para acelerar builds futuros
       - name: Cache Buildozer global directory
         uses: actions/cache@v4
         with:
           path: ~/.buildozer
           key: ${{ runner.os }}-buildozer-global
-          restore-keys: |
-            ${{ runner.os }}-buildozer-global
+          restore-keys: ${{ runner.os }}-buildozer-global
 
       - name: Cache Buildozer directory in app
         uses: actions/cache@v4
         with:
           path: .buildozer
           key: ${{ runner.os }}-buildozer-app
-          restore-keys: |
-            ${{ runner.os }}-buildozer-app
+          restore-keys: ${{ runner.os }}-buildozer-app
 
       - name: Cache Android SDK
         uses: actions/cache@v4
         with:
           path: ~/.buildozer/android/platform/android-sdk
           key: ${{ runner.os }}-android-sdk
-          restore-keys: |
-            ${{ runner.os }}-android-sdk
+          restore-keys: ${{ runner.os }}-android-sdk
 
-      # Install dependencies
-      - name: Install dependencies
+      # Instalar dependencias del sistema (incluyendo Rust)
+      - name: Install system dependencies
         run: |
           sudo apt update
-          sudo apt-get install -y \
-            build-essential \
-            git \
-            ffmpeg \
-            libsdl2-dev \
-            libsdl2-image-dev \
-            libsdl2-mixer-dev \
-            libsdl2-ttf-dev \
-            libportmidi-dev \
-            libswscale-dev \
-            libavformat-dev \
-            libavcodec-dev \
-            libunwind-dev \
-            zlib1g-dev \
-            autoconf-archive
-          sudo apt-get install -y \
-            libsqlite3-dev \
-            sqlite3 \
-            bzip2 \
-            libbz2-dev \
-            zlib1g-dev \
-            openssl \
-            libgdbm-dev \
-            libgdbm-compat-dev \
-            liblzma-dev \
-            libreadline-dev \
-            uuid-dev \
-            libgstreamer1.0 \
-            gstreamer1.0-plugins-base \
-            gstreamer1.0-plugins-good
-          sudo apt-get install -y \
-            zip \
-            unzip \
-            autoconf \
-            libtool \
-            automake \
-            libltdl-dev \
-            m4 \
-            pkg-config \
-            libncurses5-dev \
-            libncursesw5-dev \
-            libtinfo6 \
-            cmake \
-            libffi-dev \
-            libssl-dev \
-            autopoint \
-            gettext
+          sudo apt install -y git zip unzip openjdk-17-jdk python3-pip \
+            autoconf libtool pkg-config zlib1g-dev libncurses5-dev \
+            libncursesw5-dev libtinfo6 cmake libffi-dev libssl-dev \
+            automake autopoint gettext curl
+          # Instalar Rust (necesario para p4a develop)
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 
-      # Set up Java 17 required by Gradle
-      - name: Setup Java 17 required by Gradle
-        uses: actions/setup-java@v4
-        with:
-          distribution: "temurin" # or 'zulu', 'liberica', etc.
-          java-version: "17"
-
-      # Set up Python
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.9" #set your python version
-
-      # Install pip dependencies
-      - name: Install pip dependencies
+      # Agregar PPA deadsnakes para Python 3.14 (requerido por p4a develop)
+      - name: Install Python 3.14
         run: |
+          sudo add-apt-repository ppa:deadsnakes/ppa -y
+          sudo apt update
+          sudo apt install -y python3.14 python3.14-venv python3.14-dev
+
+      # Crear y activar entorno virtual con Python 3.14
+      - name: Setup virtual environment with Python 3.14
+        run: |
+          python3.14 -m venv venv_p4a
+          source venv_p4a/bin/activate
+          echo "VIRTUAL_ENV=$PWD/venv_p4a" >> $GITHUB_ENV
+          echo "$PWD/venv_p4a/bin" >> $GITHUB_PATH
+
+      # Instalar Buildozer (rama master) y dependencias de Python
+      - name: Install Buildozer and dependencies
+        run: |
+          source venv_p4a/bin/activate
           pip install --upgrade pip
-          pip install buildozer cython==3.0.11
+          pip install git+https://github.com/kivy/buildozer
+          pip install legacy-cgi setuptools cython==0.29.34
 
-      # Build with Buildozer
+      # Construir la APK
       - name: Build with Buildozer
-        id: buildozer
         run: |
+          source venv_p4a/bin/activate
+          # Forzar respuesta sí a todas las preguntas de licencias
           yes | buildozer -v android debug
-        # yes | buildozer -v android release
-        # run this for generating aab (Android App Bundle) [Required by google play]
 
-        # Upload artifacts
+      # Subir el APK generado
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: package
-          path: |
-            bin/*.apk
-            bin/*.aab
+          name: control-iluminacion-apk
+          path: bin/*.apk
