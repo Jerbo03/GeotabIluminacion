@@ -90,81 +90,138 @@ BoxLayout:
         size_hint_y: 0.1
         color: 0.5, 0.5, 0.5, 1
     
-    # Botones de control
-    BoxLayout:
-        orientation: "vertical"
+    # Tabla de control con 4 botones tipo interruptor
+    GridLayout:
+        cols: 2
         padding: 20
         spacing: border_width
         size_hint_y: 0.7
         
-        Button:
-            id: btn_apagar
-            text: "APAGAR LUCES"
-            background_color: 0.4, 0.2, 0.2, 1
+        # Primera fila - Títulos (reducido a 0.05)
+        Label:
+            text: "[b]GENERADOR[/b]"
+            markup: True
+            font_size: "14sp"
             color: 0.9, 0.9, 0.9, 1
-            background_normal: ''
-            font_size: "20sp"
-            
-            canvas.after:
-                Color:
-                    rgba: 0, 0, 0, 1  # Negro para el borde
-                Line:
-                    rounded_rectangle: (self.x, self.y, self.width, self.height, border_width)
-                    width: border_width/2
-            
-            on_release: 
-                app.send_action("apagar")
-                root.ids.btn_apagar.background_color = (1, 0.3, 0.3, 1)
-                root.ids.btn_apagar.color = (0.1, 0.1, 0.1, 1)
-                root.ids.btn_prender.background_color = (0.2, 0.4, 0.2, 1)
-                root.ids.btn_prender.color = (0.9, 0.9, 0.9, 1)
-                root.ids.btn_luces.background_color = (0.4, 0.4, 0.2, 1)
-                root.ids.btn_luces.color = (0.9, 0.9, 0.9, 1)
-
+            size_hint_y: 0.05
+        
+        Label:
+            text: "[b]LUCES[/b]"
+            markup: True
+            font_size: "14sp"
+            color: 0.9, 0.9, 0.9, 1
+            size_hint_y: 0.05
+        
+        # Segunda fila - Botones ON
         Button:
-            id: btn_prender
-            text: "PRENDER LUCES"
+            id: btn_gen_on
+            text: "ON"
             background_color: 0.2, 0.4, 0.2, 1
             color: 0.9, 0.9, 0.9, 1
             background_normal: ''
             font_size: "20sp"
+            size_hint_y: 0.475
             
             canvas.after:
                 Color:
-                    rgba: 0, 0, 0, 1  # Negro para el borde
+                    rgba: 0, 0, 0, 1
                 Line:
                     rounded_rectangle: (self.x, self.y, self.width, self.height, border_width)
                     width: border_width/2
             
             on_release: 
-                app.send_action("prender")
-                root.ids.btn_prender.background_color = (0.3, 1, 0.3, 1)
-                root.ids.btn_prender.color = (0.1, 0.1, 0.1, 1)
-                root.ids.btn_apagar.background_color = (0.4, 0.2, 0.2, 1)
-                root.ids.btn_apagar.color = (0.9, 0.9, 0.9, 1)
-                root.ids.btn_luces.background_color = (0.4, 0.4, 0.2, 1)
-                root.ids.btn_luces.color = (0.9, 0.9, 0.9, 1)
-
+                app.send_action("gen_on")
+                # Solo afecta al par GENERADOR
+                root.ids.btn_gen_on.background_color = (0.3, 1, 0.3, 1)
+                root.ids.btn_gen_on.color = (0.1, 0.1, 0.1, 1)
+                root.ids.btn_gen_off.background_color = (0.4, 0.2, 0.2, 1)
+                root.ids.btn_gen_off.color = (0.9, 0.9, 0.9, 1)
+                # Habilitar botones de LUCES (volver a estado inicial)
+                root.ids.btn_light_on.disabled = False
+                root.ids.btn_light_off.disabled = False
+                root.ids.btn_light_on.background_color = (0.2, 0.4, 0.2, 1)
+                root.ids.btn_light_on.color = (0.9, 0.9, 0.9, 1)
+                root.ids.btn_light_off.background_color = (0.4, 0.2, 0.2, 1)
+                root.ids.btn_light_off.color = (0.9, 0.9, 0.9, 1)
+        
         Button:
-            id: btn_luces
-            text: "LUCES INTERMITENTES"
-            background_color: 0.4, 0.4, 0.2, 1
+            id: btn_light_on
+            text: "ON"
+            background_color: 0.2, 0.4, 0.2, 1
             color: 0.9, 0.9, 0.9, 1
             background_normal: ''
             font_size: "20sp"
+            size_hint_y: 0.475
+            disabled: False
             
             canvas.after:
                 Color:
-                    rgba: 0, 0, 0, 1  # Negro para el borde
+                    rgba: 0, 0, 0, 1
                 Line:
                     rounded_rectangle: (self.x, self.y, self.width, self.height, border_width)
                     width: border_width/2
             
             on_release: 
-                app.send_action("luces")
-                root.ids.btn_luces.background_color = (1, 1, 0.3, 1)
-                root.ids.btn_luces.color = (0.1, 0.1, 0.1, 1)
-                root.ids.btn_apagar.background_color = (0.4, 0.2, 0.2, 1)
-                root.ids.btn_apagar.color = (0.9, 0.9, 0.9, 1)
-                root.ids.btn_prender.background_color = (0.2, 0.4, 0.2, 1)
-                root.ids.btn_prender.color = (0.9, 0.9, 0.9, 1)
+                app.send_action("light_on")
+                # Solo afecta al par LUCES
+                root.ids.btn_light_on.background_color = (0.3, 1, 0.3, 1)
+                root.ids.btn_light_on.color = (0.1, 0.1, 0.1, 1)
+                root.ids.btn_light_off.background_color = (0.4, 0.2, 0.2, 1)
+                root.ids.btn_light_off.color = (0.9, 0.9, 0.9, 1)
+        
+        # Tercera fila - Botones OFF
+        Button:
+            id: btn_gen_off
+            text: "OFF"
+            background_color: 0.4, 0.2, 0.2, 1
+            color: 0.9, 0.9, 0.9, 1
+            background_normal: ''
+            font_size: "20sp"
+            size_hint_y: 0.475
+            
+            canvas.after:
+                Color:
+                    rgba: 0, 0, 0, 1
+                Line:
+                    rounded_rectangle: (self.x, self.y, self.width, self.height, border_width)
+                    width: border_width/2
+            
+            on_release: 
+                app.send_action("gen_off")
+                # Solo afecta al par GENERADOR
+                root.ids.btn_gen_off.background_color = (1, 0.3, 0.3, 1)
+                root.ids.btn_gen_off.color = (0.1, 0.1, 0.1, 1)
+                root.ids.btn_gen_on.background_color = (0.2, 0.4, 0.2, 1)
+                root.ids.btn_gen_on.color = (0.9, 0.9, 0.9, 1)
+                # Deshabilitar botones de LUCES y ponerlos grises
+                root.ids.btn_light_on.disabled = True
+                root.ids.btn_light_off.disabled = True
+                root.ids.btn_light_on.background_color = (0.3, 0.3, 0.3, 1)
+                root.ids.btn_light_on.color = (0.5, 0.5, 0.5, 1)
+                root.ids.btn_light_off.background_color = (0.3, 0.3, 0.3, 1)
+                root.ids.btn_light_off.color = (0.5, 0.5, 0.5, 1)
+        
+        Button:
+            id: btn_light_off
+            text: "OFF"
+            background_color: 0.4, 0.2, 0.2, 1
+            color: 0.9, 0.9, 0.9, 1
+            background_normal: ''
+            font_size: "20sp"
+            size_hint_y: 0.475
+            disabled: False
+            
+            canvas.after:
+                Color:
+                    rgba: 0, 0, 0, 1
+                Line:
+                    rounded_rectangle: (self.x, self.y, self.width, self.height, border_width)
+                    width: border_width/2
+            
+            on_release: 
+                app.send_action("light_off")
+                # Solo afecta al par LUCES
+                root.ids.btn_light_off.background_color = (1, 0.3, 0.3, 1)
+                root.ids.btn_light_off.color = (0.1, 0.1, 0.1, 1)
+                root.ids.btn_light_on.background_color = (0.2, 0.4, 0.2, 1)
+                root.ids.btn_light_on.color = (0.9, 0.9, 0.9, 1)
