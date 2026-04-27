@@ -32,7 +32,7 @@ source.include_exts = py,png,jpg,kv,atlas
 version = 1.0
 
 # (list) Application requirements
-requirements = python3,kivy,requests,mygeotab==0.8.1
+requirements = python3,kivy,aiohttp,mygeotab==0.8.1
 
 # (str) Presplash of the application
 presplash.filename = %(source.dir)s/logo.png
@@ -55,7 +55,7 @@ android.permissions = INTERNET
 # --- Configuración para API 36 (Android 16 Baklava) y p4a develop ---
 android.api = 36
 android.minapi = 21
-android.ndk = 29
+android.ndk = 23
 android.sdk = 30
 
 # Arquitecturas (solo 64 bits recomendado para Play Store)
